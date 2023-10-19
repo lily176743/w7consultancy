@@ -1,6 +1,6 @@
 const Leads = () => {
     return (
-        <h1>This is Leads Page</h1>
+        <div className="text-[50px] text-white text-center">This is Leads Page</div>
     );
 };
 
