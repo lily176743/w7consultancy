@@ -5,11 +5,11 @@ import SideBar from "./SideBar";
 
 const MainLayout = () => {
     return (
-        <div className="flex flex-row p-3 bg-black h-screen">
-            <div className="basis-1/6 bg-gradient-to-t from-amber-950 from-0% via-stone-900 via-30% to-stone-600 to-90% rounded-[50px] m-3">
+        <div className="flex flex-row p-3 bg-black h-auto min-h-screen">
+            <div className="basis-1/6 bg-slate-800 rounded-[50px] m-3">
                 <SideBar />
             </div>
-            <div className="basis-5/6 bg-gradient-to-t from-amber-950 from-0% via-stone-900 via-30% to-stone-600 to-90% rounded-[50px] m-3 content-center grid">
+            <div className="basis-5/6 bg-slate-800 rounded-[50px] m-3">
                 <Outlet />
             </div>
         </div>
