@@ -1,16 +1,16 @@
 export interface LeadsType {
     _id?: string;
-    name: string;
-    email:string;
-    phone: string;
-    car:string;
-    year: number | undefined;
-    fipe: string;
-    mileage: number | undefined;
-    entry: number | undefined;
-    installment: number | undefined;
-    paid: number | undefined;
-    times: number | undefined;
+    name?: string;
+    email?:string;
+    phone?: string;
+    car?:string;
+    year?: number | any;
+    fipe?: string;
+    mileage?: number | any;
+    entry?: number | any;
+    installment?: number | any;
+    paid?: number | any;
+    times?: number | any;
 }
 
 export interface LeadsProps {

@@ -3,6 +3,9 @@ import * as Yup from 'yup';
 
 // project import
 import { LeadsType } from '../types/leads';
+import { addLeads } from '../store/reducers/leads';
+import { dispatch } from '../store';
+import { openSnackbar } from '../store/reducers/snackbar';
 
 // constant
 const leadsInitialValues: LeadsType = {
@@ -10,13 +13,13 @@ const leadsInitialValues: LeadsType = {
     email: '',
     phone: '',
     car: '',
-    year: undefined,
+    year: '',
     fipe: '',
-    mileage: undefined,
-    entry: undefined,
-    installment: undefined,
-    paid: undefined,
-    times: undefined
+    mileage: '',
+    entry: '',
+    installment: '',
+    paid: '',
+    times: ''
 };
 
 const InputValidStyle: string = "rounded-[50px] text-base bg-black text-white bg-opacity-30 placeholder-gray-600 px-6 py-3";
@@ -24,6 +27,23 @@ const InputErrorStyle: string = "rounded-[50px] text-base bg-black border-2 bord
 const ErrorFieldStyle: string = "bg-blue-500 bg-opacity-30 text-white text-xs font-semibold text-center rounded-xl p-1"
 
 const Register = () => {
+    const handleAddLeads = async (values: LeadsType) => {
+        const addLeadsResult = await dispatch(addLeads(values));
+        console.log('addLeadsResult', addLeadsResult.payload[0]);
+        dispatch(
+            openSnackbar({
+                open: true,
+                message: addLeadsResult.payload[0].message,
+                variant: 'alert',
+                alert: {
+                    color: addLeadsResult.payload[0].color,
+                },
+                close: false,
+                transition: 'SlideLeft'
+            })
+        );
+    }
+
     const LeadsSchema = Yup.object().shape({
         name: Yup.string().max(100, 'Must be 100 characters or less').required('Nome is required'),
         email: Yup.string().required('Email is required').email('Must be a valid E-mail'),
@@ -45,9 +65,10 @@ const Register = () => {
             onSubmit={(values, { setSubmitting }) => {
                 console.log('Formik Values', values);
                 try {
+                    handleAddLeads(values);
                     setSubmitting(false);
                 } catch (error) {
-                    console.log(error);
+                    console.log('error', error);
                 }
             }}
         >
@@ -82,9 +103,9 @@ const Register = () => {
                         <Field className={errors.entry && touched.entry ? InputErrorStyle : InputValidStyle} id="entry" name="entry" placeholder="$ Entrada" />
                         <Field className={errors.installment && touched.installment ? InputErrorStyle : InputValidStyle} id="installment" name="installment" placeholder="Valor da Parcela" />
                         <Field className={errors.paid && touched.paid ? InputErrorStyle : InputValidStyle} id="paid" name="paid" placeholder="Quantidade Paga?" />
-                        <Field className={errors.times && touched.times ? InputErrorStyle : InputValidStyle} id="times" name="times" placeholder="Quantas Vezes?" />
+                        <Field className={errors?.times && touched?.times ? InputErrorStyle : InputValidStyle} id="times" name="times" placeholder="Quantas Vezes?" />
                         <div className='flex justify-end my-10'>
-                            <button className='bg-green-600 rounded-[50px] text-xl py-3 text-white text-center font-semibold w-52' type="submit">Cadastrar</button>
+                            <button className='rounded-[50px] text-xl py-3 text-white text-center font-semibold w-52 bg-sky-500 hover:bg-sky-700' type="submit">Cadastrar</button>
                         </div>
                     </div>
                 </Form>

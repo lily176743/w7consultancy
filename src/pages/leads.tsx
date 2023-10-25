@@ -1,6 +1,6 @@
 const Leads = () => {
     return (
-        <div className="text-[50px] text-white text-center">This is Leads Page</div>
+        <div className="flex items-center justify-center text-[50px] text-white">This is Leads Page</div>
     );
 };
 
