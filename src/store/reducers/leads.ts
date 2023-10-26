@@ -6,39 +6,39 @@ import axios from '../../utils/axios';
 // types
 import { LeadsProps, LeadsType } from '../../types/leads';
 
+// import { SERVER_URL } from '../../config';
+
 // initial state
 const initialState: LeadsProps = {
   leads: [],
   loading: false,
   error: null
 };
-const SERVER_URL = 'http://localhost:5000/'
+
 // ==============================|| SLICE - USER ||============================== //
 
 export const fetchLeads = createAsyncThunk('leads/fetchLeads', async () => {
-  const response = await axios.get(`${SERVER_URL}api/v1/users`);
-  // console.log(response.data);
+  const response = await axios.get(`api/v1/leads/getleads`);
   return response.data;
 });
 
 export const addLeads = createAsyncThunk('leads/addLeads', async (newLeads: LeadsType, { rejectWithValue  }) => {
   try {
-    const response = await axios.post(`${SERVER_URL}api/v1/leads/register`, newLeads);
+    const response = await axios.post(`api/v1/leads/register`, newLeads);
     return response.data;
   } catch (err: any) {
-    console.log('err1------>', err);
     return rejectWithValue(err);
   }
 });
 
 export const updateLeads = createAsyncThunk('leads/updateLeads', async (updatedUser: LeadsType) => {
   let updatingData: any = Object.assign({}, updatedUser);
-  const response = await axios.put(`${SERVER_URL}api/v1/users/${updatingData._id}`, updatingData);
+  const response = await axios.put(`api/v1/users/${updatingData._id}`, updatingData);
   return response.data;
 });
 
 export const deleteLeads = createAsyncThunk('leads/deleteLeads', async (userId: string) => {
-  await axios.delete(`${SERVER_URL}api/v1/users/${userId}`);
+  await axios.delete(`api/v1/users/${userId}`);
   return userId;
 });
 
@@ -72,7 +72,6 @@ const leads = createSlice({
         state.loading = false;
         if(action.payload[0]) {
           state.error = action.payload[0].message;
-          console.log('reject1------->', action.payload[0].message)
         }
         else {
           state.error = action.error.message;

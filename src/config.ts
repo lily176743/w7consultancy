@@ -24,6 +24,6 @@ const config: DefaultConfigProps = {
   themeDirection: ThemeDirection.LTR
 };
 
-export const SERVER_URL = 'http://localhost:5000/';
+export const SERVER_URL = 'https://192.168.142.157:5000/';
 
 export default config;

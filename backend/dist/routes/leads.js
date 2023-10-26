@@ -16,6 +16,7 @@ exports.leadsRoute = void 0;
 const leads_1 = __importDefault(require("../models/leads"));
 const register_1 = require("../validation/leads/register");
 const register_2 = require("../swagger/leads/register");
+const getleads_1 = require("../swagger/leads/getleads");
 const options = { abortEarly: false, stripUnknown: true };
 exports.leadsRoute = [
     {
@@ -42,9 +43,9 @@ exports.leadsRoute = [
         handler: (request, response) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const email = request.payload["email"];
-                const user = yield leads_1.default.findOne({ email });
-                if (user) {
-                    return response.response([{ message: "User already exists.", code: 409 }]).code(409);
+                const lead = yield leads_1.default.findOne({ email });
+                if (lead) {
+                    return response.response([{ message: "Leads already exists.", code: 409, color: "error" }]).code(409);
                 }
                 // get leads data from request data
                 const newLeadsData = {
@@ -63,7 +64,30 @@ exports.leadsRoute = [
                 const newLeads = new leads_1.default(newLeadsData);
                 // save leads in db
                 const leadsResult = yield newLeads.save();
-                return response.response([{ leadsResult, code: 201 }]).code(201);
+                return response.response([{ leadsResult, message: "Leads added successfully", code: 201, color: "success" }]).code(201);
+            }
+            catch (error) {
+                return response.response(error).code(500);
+            }
+        })
+    },
+    {
+        method: "GET",
+        path: "/getleads",
+        options: {
+            description: "Get Leads",
+            plugins: getleads_1.getLeadsSwagger,
+            tags: ["api", "leads"],
+        },
+        handler: (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const allLeads = yield leads_1.default.find({});
+                if (allLeads) {
+                    return response.response([{ allLeads, message: "Got leads successfully.", code: 200 }]).code(200);
+                }
+                else {
+                    return response.response([{ message: "Active leads not found.", code: 404 }]).code(404);
+                }
             }
             catch (error) {
                 return response.response(error).code(500);
