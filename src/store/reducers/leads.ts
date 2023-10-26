@@ -52,9 +52,9 @@ const leads = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchLeads.fulfilled, (state, action: PayloadAction<LeadsType[]>) => {
+      .addCase(fetchLeads.fulfilled, (state, action: any) => {
         state.loading = false;
-        state.leads = action.payload;
+        state.leads = action.payload[0].allLeads;
       })
       .addCase(fetchLeads.rejected, (state) => {
         state.loading = false;

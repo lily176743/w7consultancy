@@ -77,7 +77,7 @@ export let leadsRoute = [
             try {
                 const allLeads = await Leads.find({});
                 
-                if(allLeads) {
+                if(allLeads.length) {
                     return response.response([{ allLeads, message: "Got leads successfully.", code: 200 }]).code(200);
                 }
                 else {

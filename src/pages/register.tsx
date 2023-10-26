@@ -74,8 +74,8 @@ const Register = () => {
         >
             {({ errors, touched }) => (
                 <Form>
-                    <div className='flex flex-col bg gap-3 px-16'>
-                        <div className='flex items-center justify-center h-44 text-white font-semibold text-3xl'>Cadastro de Lead</div>
+                    <div className='flex flex-col gap-3 px-16 py-10'>
+                        <div className='flex items-center justify-center h-36 text-white font-semibold text-3xl'>Cadastro de Lead</div>
                         <div className='flex flex-wrap gap-3'>
                             <ErrorMessage name='name' className={ErrorFieldStyle} component='div' />
                             <ErrorMessage name='email' className={ErrorFieldStyle} component='div' />
