@@ -11,6 +11,7 @@ export interface LeadsType {
     installment?: number | any;
     paid?: number | any;
     times?: number | any;
+    attendant: string;
 }
 
 export interface LeadsProps {

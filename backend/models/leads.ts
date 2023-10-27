@@ -46,6 +46,10 @@ const leadsSchema = new Schema({
         type: Number,
         required: true,
     },
+    attendant: {
+        type: String,
+        required: true,
+    },
 });
 
 const Leads = mongoose.model('leads', leadsSchema);

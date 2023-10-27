@@ -50,6 +50,10 @@ const leadsSchema = new Schema({
         type: Number,
         required: true,
     },
+    attendant: {
+        type: String,
+        required: true,
+    },
 });
 const Leads = mongoose_1.default.model('leads', leadsSchema);
 exports.default = Leads;

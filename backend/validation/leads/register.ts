@@ -35,4 +35,7 @@ export const createLeadsSchema = Joi.object({
     times: Joi.number().required().messages({
         "any.required": "Please provide times.",
     }),
+    attendant: Joi.string().required().messages({
+        "any.required": "Please provide attendant.",
+    }),
 })

@@ -19,8 +19,11 @@ const leadsInitialValues: LeadsType = {
     entry: '',
     installment: '',
     paid: '',
-    times: ''
+    times: '',
+    attendant: 'Attendant 1',
 };
+
+const allAttendant = ['Attendant 1', 'Attendant 2', 'Attendant 3', 'Attendant 4'];
 
 const InputValidStyle: string = "rounded-[50px] text-base bg-black text-white bg-opacity-30 placeholder-gray-600 px-6 py-3";
 const InputErrorStyle: string = "rounded-[50px] text-base bg-black border-2 border-blue-500 text-white bg-opacity-30 placeholder-gray-600 px-6 py-3 animate-pulse";
@@ -56,6 +59,7 @@ const Register = () => {
         installment: Yup.number().required('Valor da Parcela is required').typeError('Invalid Valor da Parcela number'),
         paid: Yup.number().required('Quantidade Paga is required').typeError('Invalid Quantidade Paga number'),
         times: Yup.number().required('Quantas Vezes times is required').typeError('Invalid Quantas Vezes number'),
+        attendant: Yup.string().required('Attendant is required'),
     });
 
     return (
@@ -104,7 +108,14 @@ const Register = () => {
                         <Field className={errors.installment && touched.installment ? InputErrorStyle : InputValidStyle} id="installment" name="installment" placeholder="Valor da Parcela" />
                         <Field className={errors.paid && touched.paid ? InputErrorStyle : InputValidStyle} id="paid" name="paid" placeholder="Quantidade Paga?" />
                         <Field className={errors?.times && touched?.times ? InputErrorStyle : InputValidStyle} id="times" name="times" placeholder="Quantas Vezes?" />
-                        <div className='flex justify-end my-10'>
+                        <div className='flex flex-row justify-between my-6'>
+                            <Field className='rounded-[50px] bg-black text-white font-mono text-lg bg-opacity-30 placeholder-gray-600 px-10 py-3' id="attendant" name="attendant" as="select">
+                                {allAttendant.map((column: string) => (
+                                    <option className='' key={column} value={column}>
+                                        {column}
+                                    </option>
+                                ))}
+                            </Field>
                             <button className='rounded-[50px] text-xl py-3 text-white text-center font-semibold w-52 bg-sky-500 hover:bg-sky-700' type="submit">Cadastrar</button>
                         </div>
                     </div>

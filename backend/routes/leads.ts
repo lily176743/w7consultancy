@@ -54,6 +54,7 @@ export let leadsRoute = [
                     installment: request.payload['installment'],
                     paid: request.payload['paid'],
                     times: request.payload['times'],
+                    attendant: request.payload['attendant'],
                 }
                 const newLeads: any = new Leads(newLeadsData);
 

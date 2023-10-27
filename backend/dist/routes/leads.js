@@ -60,6 +60,7 @@ exports.leadsRoute = [
                     installment: request.payload['installment'],
                     paid: request.payload['paid'],
                     times: request.payload['times'],
+                    attendant: request.payload['attendant'],
                 };
                 const newLeads = new leads_1.default(newLeadsData);
                 // save leads in db
@@ -82,7 +83,7 @@ exports.leadsRoute = [
         handler: (request, response) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const allLeads = yield leads_1.default.find({});
-                if (allLeads) {
+                if (allLeads.length) {
                     return response.response([{ allLeads, message: "Got leads successfully.", code: 200 }]).code(200);
                 }
                 else {
