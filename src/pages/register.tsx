@@ -3,26 +3,12 @@ import * as Yup from 'yup';
 
 // project import
 import { LeadsType } from '../types/leads';
-import { addLeads } from '../store/reducers/leads';
+import { addLeads, updateLeads } from '../store/reducers/leads';
 import { dispatch } from '../store';
 import { openSnackbar } from '../store/reducers/snackbar';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // constant
-const leadsInitialValues: LeadsType = {
-    name: '',
-    email: '',
-    phone: '',
-    car: '',
-    year: '',
-    fipe: '',
-    mileage: '',
-    entry: '',
-    installment: '',
-    paid: '',
-    times: '',
-    attendant: 'Attendant 1',
-};
-
 const allAttendant = ['Attendant 1', 'Attendant 2', 'Attendant 3', 'Attendant 4'];
 
 const InputValidStyle: string = "rounded-[50px] text-base bg-black text-white bg-opacity-30 placeholder-gray-600 px-6 py-3";
@@ -30,21 +16,62 @@ const InputErrorStyle: string = "rounded-[50px] text-base bg-black border-2 bord
 const ErrorFieldStyle: string = "bg-blue-500 bg-opacity-30 text-white text-xs font-semibold text-center rounded-xl p-1"
 
 const Register = () => {
-    const handleAddLeads = async (values: LeadsType) => {
-        const addLeadsResult = await dispatch(addLeads(values));
-        console.log('addLeadsResult', addLeadsResult.payload[0]);
-        dispatch(
-            openSnackbar({
-                open: true,
-                message: addLeadsResult.payload[0].message,
-                variant: 'alert',
-                alert: {
-                    color: addLeadsResult.payload[0].color,
-                },
-                close: false,
-                transition: 'SlideLeft'
-            })
-        );
+    const navigate = useNavigate();
+    const location = useLocation();
+    const leadsData = location.state.data;
+
+    let leadsInitialValues: LeadsType = {
+        name: '',
+        email: '',
+        phone: '',
+        car: '',
+        year: '',
+        fipe: '',
+        mileage: '',
+        entry: '',
+        installment: '',
+        paid: '',
+        times: '',
+        attendant: 'Attendant 1',
+    };
+    if (leadsData) {
+        leadsInitialValues = leadsData;
+    }
+
+    const handleLeads = async (values: LeadsType) => {
+        if (leadsData) {
+            const updateLeadsResult = await dispatch(updateLeads(values));
+            console.log('addLeadsResult', updateLeadsResult.payload[0]);
+            dispatch(
+                openSnackbar({
+                    open: true,
+                    message: updateLeadsResult.payload[0].message,
+                    variant: 'alert',
+                    alert: {
+                        color: updateLeadsResult.payload[0].color,
+                    },
+                    close: false,
+                    transition: 'SlideLeft'
+                })
+            );
+            navigate(-1);
+        }
+        else {
+            const addLeadsResult = await dispatch(addLeads(values));
+            console.log('addLeadsResult', addLeadsResult.payload[0]);
+            dispatch(
+                openSnackbar({
+                    open: true,
+                    message: addLeadsResult.payload[0].message,
+                    variant: 'alert',
+                    alert: {
+                        color: addLeadsResult.payload[0].color,
+                    },
+                    close: false,
+                    transition: 'SlideLeft'
+                })
+            );
+        }
     }
 
     const LeadsSchema = Yup.object().shape({
@@ -53,7 +80,7 @@ const Register = () => {
         phone: Yup.string().max(15).required('Whatsapp is required'),
         car: Yup.string().max(100, 'Must be 100 characters or less').required('Carro is required'),
         year: Yup.number().required('Ano is required').typeError('Invalid Ano number'),
-        fipe: Yup.string().max(100).required('Fipe is required'),
+        fipe: Yup.number().required('Fipe is required').typeError('Invalid Fipe number'),
         mileage: Yup.number().required('Kilometragem is required').typeError('Invalid Kilometragem number'),
         entry: Yup.number().required('Entrada is required').typeError('Invalid Entrada number'),
         installment: Yup.number().required('Valor da Parcela is required').typeError('Invalid Valor da Parcela number'),
@@ -65,12 +92,13 @@ const Register = () => {
     return (
         <Formik
             initialValues={leadsInitialValues}
+            enableReinitialize={true}
             validationSchema={LeadsSchema}
             onSubmit={(values, { setSubmitting }) => {
                 console.log('Formik Values', values);
                 try {
-                    handleAddLeads(values);
-                    setSubmitting(false);
+                    handleLeads(values);
+                    setSubmitting(true);
                 } catch (error) {
                     console.log('error', error);
                 }
@@ -116,7 +144,11 @@ const Register = () => {
                                     </option>
                                 ))}
                             </Field>
-                            <button className='rounded-[50px] text-xl py-3 text-white text-center font-semibold w-52 bg-sky-500 hover:bg-sky-700' type="submit">Cadastrar</button>
+                            <div className='flex flex-row justify-between gap-5'>
+                                <button className='rounded-[50px] text-xl py-3 text-white text-center font-semibold w-52 bg-sky-600 hover:bg-sky-700' type="submit">
+                                    {!leadsData ? 'Cadastrar' : 'Editar'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </Form>

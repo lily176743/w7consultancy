@@ -22,7 +22,7 @@ export const fetchLeads = createAsyncThunk('leads/fetchLeads', async () => {
   return response.data;
 });
 
-export const addLeads = createAsyncThunk('leads/addLeads', async (newLeads: LeadsType, { rejectWithValue  }) => {
+export const addLeads = createAsyncThunk('leads/addLeads', async (newLeads: LeadsType, { rejectWithValue }) => {
   try {
     const response = await axios.post(`api/v1/leads/register`, newLeads);
     return response.data;
@@ -31,10 +31,14 @@ export const addLeads = createAsyncThunk('leads/addLeads', async (newLeads: Lead
   }
 });
 
-export const updateLeads = createAsyncThunk('leads/updateLeads', async (updatedUser: LeadsType) => {
-  let updatingData: any = Object.assign({}, updatedUser);
-  const response = await axios.put(`api/v1/users/${updatingData._id}`, updatingData);
-  return response.data;
+export const updateLeads = createAsyncThunk('leads/updateLeads', async (updatedLeads: LeadsType, { rejectWithValue }) => {
+  try {
+    let updatingData: any = Object.assign({}, updatedLeads);
+    const response = await axios.put(`api/v1/leads/updateleads/${updatingData._id}`, updatingData);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error);
+  }
 });
 
 export const deleteLeads = createAsyncThunk('leads/deleteLeads', async (userId: string) => {
@@ -42,10 +46,25 @@ export const deleteLeads = createAsyncThunk('leads/deleteLeads', async (userId: 
   return userId;
 });
 
+export const getLeadsDetails = (_id: string) => async (dispatch: any) => {
+  try {
+    const response = await axios.get(`api/v1/leads/getleads/${_id}`);
+    if (response.status === 200) {
+      dispatch(setLeadsDetails(response.data));
+    }
+  } catch (error: any) {
+    console.log('getLeadsDetails', error);
+  }
+}
+
 const leads = createSlice({
   name: 'leads',
   initialState,
-  reducers: {},
+  reducers: {
+    setLeadsDetails: (state, action: any) => {
+      state.leads = action.payload[0].leadsDetails;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchLeads.pending, (state) => {
@@ -68,9 +87,9 @@ const leads = createSlice({
         state.loading = false;
         state.leads.push(action.payload);
       })
-      .addCase(addLeads.rejected, (state, action:any) => {
+      .addCase(addLeads.rejected, (state, action: any) => {
         state.loading = false;
-        if(action.payload[0]) {
+        if (action.payload[0]) {
           state.error = action.payload[0].message;
         }
         else {
@@ -84,15 +103,21 @@ const leads = createSlice({
       })
       .addCase(updateLeads.fulfilled, (state, action: PayloadAction<LeadsType>) => {
         state.loading = false;
-        const updatedUser = action.payload;
-        let updatingData: any = Object.assign({}, updatedUser);
+        const updatedLeads = action.payload;
+        let updatingData: any = Object.assign({}, updatedLeads);
         const index = state.leads.findIndex((leads) => leads._id === updatingData._id);
         if (index !== -1) {
-          state.leads[index] = updatedUser;
+          state.leads[index] = updatedLeads;
         }
       })
-      .addCase(updateLeads.rejected, (state) => {
+      .addCase(updateLeads.rejected, (state, action: any) => {
         state.loading = false;
+        if (action.payload[0]) {
+          state.error = action.payload[0].message;
+        }
+        else {
+          state.error = action.error.message;
+        }
         state.error = 'Failed to update leads';
       })
       .addCase(deleteLeads.pending, (state) => {
@@ -110,5 +135,9 @@ const leads = createSlice({
       });
   }
 });
+
+export const {
+  setLeadsDetails
+} = leads.actions;
 
 export default leads.reducer;

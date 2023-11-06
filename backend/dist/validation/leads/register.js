@@ -40,5 +40,8 @@ exports.createLeadsSchema = joi_1.default.object({
     times: joi_1.default.number().required().messages({
         "any.required": "Please provide times.",
     }),
+    attendant: joi_1.default.string().required().messages({
+        "any.required": "Please provide attendant.",
+    }),
 });
 //# sourceMappingURL=register.js.map

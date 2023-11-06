@@ -15,8 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.leadsRoute = void 0;
 const leads_1 = __importDefault(require("../models/leads"));
 const register_1 = require("../validation/leads/register");
-const register_2 = require("../swagger/leads/register");
-const getleads_1 = require("../swagger/leads/getleads");
+const leads_2 = require("../swagger/leads");
 const options = { abortEarly: false, stripUnknown: true };
 exports.leadsRoute = [
     {
@@ -24,7 +23,7 @@ exports.leadsRoute = [
         path: "/register",
         options: {
             description: "Register Leads",
-            plugins: register_2.leadsRegisterSwagger,
+            plugins: leads_2.leadsRegisterSwagger,
             tags: ["api", "leads"],
             validate: {
                 payload: register_1.createLeadsSchema,
@@ -77,7 +76,7 @@ exports.leadsRoute = [
         path: "/getleads",
         options: {
             description: "Get Leads",
-            plugins: getleads_1.getLeadsSwagger,
+            plugins: leads_2.getLeadsSwagger,
             tags: ["api", "leads"],
         },
         handler: (request, response) => __awaiter(void 0, void 0, void 0, function* () {
@@ -89,6 +88,51 @@ exports.leadsRoute = [
                 else {
                     return response.response([{ message: "Active leads not found.", code: 404 }]).code(404);
                 }
+            }
+            catch (error) {
+                return response.response(error).code(500);
+            }
+        })
+    },
+    {
+        method: "PUT",
+        path: "/updateleads/{id}",
+        options: {
+            description: "Update Leads",
+            plugins: leads_2.leadsUpdateSwagger,
+            tags: ["api", "leads"],
+            validate: {
+                payload: register_1.createLeadsSchema,
+                options,
+                failAction: (request, h, error) => {
+                    const details = error.details.map((d) => {
+                        return {
+                            message: d.message,
+                            path: d.path,
+                        };
+                    });
+                    return h.response(details).code(400).takeover();
+                },
+            },
+        },
+        handler: (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const leads = {
+                    name: request.payload['name'],
+                    email: request.payload['email'],
+                    phone: request.payload['phone'],
+                    car: request.payload['car'],
+                    year: request.payload['year'],
+                    fipe: request.payload['fipe'],
+                    mileage: request.payload['mileage'],
+                    entry: request.payload['entry'],
+                    installment: request.payload['installment'],
+                    paid: request.payload['paid'],
+                    times: request.payload['times'],
+                    attendant: request.payload['attendant'],
+                };
+                const updateResult = yield leads_1.default.findByIdAndUpdate(request.params.id, leads, { new: true });
+                return response.response([{ updateResult, message: "Lead has been updated", code: 200 }]).code(200);
             }
             catch (error) {
                 return response.response(error).code(500);

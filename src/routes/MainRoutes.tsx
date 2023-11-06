@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-import { useRoutes } from 'react-router-dom';
 
 // project import
 import Loadable from '../components/Loadable';
@@ -9,6 +8,9 @@ import MainLayout from '../layout/MainLayout';
 const Home = Loadable(lazy(() => import('../pages/home')));
 const Register = Loadable(lazy(() => import('../pages/register')));
 const Leads = Loadable(lazy(() => import('../pages/leads')));
+const LeadsEdit = Loadable(lazy(() => import('../pages/leadsedit')));
+const Negotiate = Loadable(lazy(() => import('../pages/negotiate')));
+const Clients = Loadable(lazy(() => import('../pages/clients')));
 
 const MainRoutes = {
     path: '/',
@@ -25,6 +27,18 @@ const MainRoutes = {
         {
             path: 'leads',
             element: <Leads />
+        },
+        {
+            path: 'leadsedit',
+            element: <LeadsEdit />
+        },
+        {
+            path: 'negotiate',
+            element: <Negotiate />
+        },
+        {
+            path: 'clients',
+            element: <Clients />
         }
     ]
 }

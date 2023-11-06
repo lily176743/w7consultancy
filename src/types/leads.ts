@@ -5,7 +5,7 @@ export interface LeadsType {
     phone?: string;
     car?:string;
     year?: number | any;
-    fipe?: string;
+    fipe?: number | any;
     mileage?: number | any;
     entry?: number | any;
     installment?: number | any;
